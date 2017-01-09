@@ -44,7 +44,11 @@ def get_app(model, classes, top, html_base_dir, temp_folder='./tmp', input_folde
 
     if keras.backend.backend() == 'tensorflow':
         single_input_shape = model.get_input_shape_at(0)[1:3]
-        input_channels = model.get_input_shape_at(0)[3]
+        # if the shape of a tensor is (None, a, b) assume that the image is grayscale
+        if len(model.get_input_shape) == 3:
+           input_channels = 1 
+        else:
+            input_channels = model.get_input_shape_at(0)[3]
     elif keras.backend.backend() == 'theano':
         single_input_shape = model.get_input_shape_at(0)[2:4]
         input_channels = model.get_input_shape_at(0)[1]
